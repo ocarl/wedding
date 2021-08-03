@@ -13,12 +13,24 @@ sheet = client.open("Bröllopsplanering").worksheets()[-1]
 list_of_guests = sheet.get_all_values()
 
 texed_list_of_guests = []
+texed_list_of_guests.append('\\vspace{3cm}\n')
+texed_list_of_guests.append('\\begin{Row}\n')
 
 for i, (id, name, desc) in enumerate(list_of_guests):
     if i > 0 and i % 2 == 0:
-        texed_list_of_guests.append('\\end{Row}\n\\begin{Row}\n\\newline\n\\newline\n')
-    texed_list_of_guests.append('    \\begin{Cell}{1}\n    %s\n    \\end{Cell}\n' % (name))
+        texed_list_of_guests.append('\\end{Row}\\\\\n')
+        texed_list_of_guests.append('\\vfill\n')
+        texed_list_of_guests.append('\\begin{Row}\n')
+    texed_list_of_guests.append('    \\begin{Cell}{1}\n')
+    texed_list_of_guests.append('        \\begin{overpic}[angle=-90,width=0.5\\paperwidth]{leaf.png}\n')
+    texed_list_of_guests.append('            \\put(20,10){\\raisebox{\\depth}{\\scalebox{-1}[-1]{%s}}}\n' % (name))
+    texed_list_of_guests.append('        \\end{overpic}\\\\\n')
+    texed_list_of_guests.append('        \\begin{overpic}[angle=90,width=0.5\\paperwidth]{leaf.png}\n')
+    texed_list_of_guests.append('            \\put(10,25){%s}\n' % (name))
+    texed_list_of_guests.append('        \\end{overpic}\n')
+    texed_list_of_guests.append('    \\end{Cell}\n')
 
+texed_list_of_guests.append('\\end{Row}\n')
 
 with open('tag_preamble.tex') as f:
     preamble = f.readlines()
