@@ -12,14 +12,11 @@ sheet = client.open("Bröllopsplanering").worksheets()[-1]
 # Extract and print all of the values
 list_of_guests = sheet.get_all_values()
 
-sorted_by_name = sorted(list_of_guests, key=lambda guest: guest[1])
-
 texed_list_of_guests = []
 
-for i, (id, name, desc, table) in enumerate(sorted_by_name):
-    if i > 0 and i % 29 == 0:
-        texed_list_of_guests.append('\\columnbreak')
-    texed_list_of_guests.append('    %s %s\\\\\n' % (name, table))
+for i, (id, name, desc, table) in enumerate(list_of_guests):
+    texed_list_of_guests.append('    \\noindent\\begin{minipage}{\\textwidth}\\centering\\scriptsize %s %s \\tiny \\\\ \\emph{%s}\\end{minipage} \\newline \\par \n' % (id.replace('#', '\#'), name, desc.replace('#', '\#')))
+
 
 with open('preamble.tex') as f:
     preamble = f.readlines()
@@ -27,7 +24,7 @@ with open('preamble.tex') as f:
 with open('postamble.tex') as f:
     postamble = f.readlines()
 
-with open('seating.tex', 'w') as f:
+with open('menu_to_print.tex', 'w') as f:
     f.writelines(preamble+texed_list_of_guests+postamble)
 
 
